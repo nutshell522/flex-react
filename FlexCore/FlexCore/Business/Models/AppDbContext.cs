@@ -24,142 +24,128 @@ namespace FlexCore.Business.Models
 		// 配置模型之間的關聯
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			// TopCategory -> MiddleCategory (一對多)
 			modelBuilder.Entity<TopCategory>()
-				.HasMany(t => t.MiddleCategories)
-				.WithOne(m => m.TopCategory)
-				.HasForeignKey(m => m.TopCategoryId);
+			   .HasMany(t => t.MiddleCategories)
+			   .WithOne(m => m.TopCategory)
+			   .HasForeignKey(m => m.TopCategoryId);
 
-			// MiddleCategory -> BottomCategory (一對多)
 			modelBuilder.Entity<MiddleCategory>()
 				.HasMany(m => m.BottomCategories)
 				.WithOne(b => b.MiddleCategory)
 				.HasForeignKey(b => b.MiddleCategoryId);
 
-			// BottomCategory -> Product (一對多)
 			modelBuilder.Entity<BottomCategory>()
 				.HasMany(b => b.Products)
 				.WithOne(p => p.BottomCategory)
 				.HasForeignKey(p => p.BottomCategoryId);
 
-			// Product -> ProductColor (一對多)
 			modelBuilder.Entity<Product>()
 				.HasMany(p => p.ProductColors)
 				.WithOne(pc => pc.Product)
 				.HasForeignKey(pc => pc.ProductId);
 
-			// ProductColor -> ProductSize (一對多)
 			modelBuilder.Entity<ProductColor>()
 				.HasMany(pc => pc.ProductSize)
 				.WithOne(ps => ps.ProductColor)
 				.HasForeignKey(ps => ps.ProductColorId);
 
-			// ProductColor -> ProductPicture (一對多)
 			modelBuilder.Entity<ProductColor>()
 				.HasMany(pc => pc.productPictures)
 				.WithOne(pp => pp.ProductColor)
 				.HasForeignKey(pp => pp.ProductColorId);
 
-			// ProductColor -> ColorOption (多對一)
-			modelBuilder.Entity<ProductColor>()
-				.HasOne(pc => pc.ColorOption)
-				.WithMany()
-				.HasForeignKey(pc => pc.ProductId)
-				.HasForeignKey(pc => pc.ColorOptionId);
-
-
-			// ProductSize -> SizeOption (多對一)
 			modelBuilder.Entity<ProductSize>()
 				.HasOne(ps => ps.SizeOption)
 				.WithMany()
-				.HasForeignKey(ps => ps.SizeOptionId)
-				.HasForeignKey(ps => ps.ProductColorId);
+				.HasForeignKey(ps => ps.SizeOptionId);
+
+			modelBuilder.Entity<ProductColor>()
+				.HasOne(pc => pc.ColorOption)
+				.WithMany()
+				.HasForeignKey(pc => pc.ColorOptionId);
 		}
 
 		// 用於插入初始數據的方法
-		public void SeedData()
+		public async Task SeedDataAsync()
 		{
-			if (!TopCategories.Any())
+			if (!await TopCategories.AnyAsync())
 			{
 				var colorOptions = new List<ColorOption>
-				{
-					new ColorOption { Name = "黑色", Color="#000000" ,Status=true },
-					new ColorOption { Name = "白色", Color="#ffffff" ,Status=true },
-					new ColorOption { Name = "紅色", Color="#ff0000" ,Status=true },
-					new ColorOption { Name = "綠色", Color="#00ff00" ,Status=true },
-					new ColorOption { Name = "藍色", Color="#0000ff" ,Status=true },
-					new ColorOption { Name = "黃色", Color="#ffff00" ,Status=true },
-					new ColorOption { Name = "紫色", Color="#800080" ,Status=true },
-				};
-				ColorOptions.AddRange(colorOptions);
-				SaveChanges();
+		{
+			new ColorOption { Name = "黑色", Color="#000000" ,Status=true },
+			new ColorOption { Name = "白色", Color="#ffffff" ,Status=true },
+			new ColorOption { Name = "紅色", Color="#ff0000" ,Status=true },
+			new ColorOption { Name = "綠色", Color="#00ff00" ,Status=true },
+			new ColorOption { Name = "藍色", Color="#0000ff" ,Status=true },
+			new ColorOption { Name = "黃色", Color="#ffff00" ,Status=true },
+			new ColorOption { Name = "紫色", Color="#800080" ,Status=true },
+		};
+				await ColorOptions.AddRangeAsync(colorOptions);
+				await SaveChangesAsync();
 
 				var sizeOptions = new List<SizeOption>
+		{
+			new SizeOption { Name = "XS", Status=true },
+			new SizeOption { Name = "S", Status=true },
+			new SizeOption { Name = "M", Status=true },
+			new SizeOption { Name = "L", Status=true },
+			new SizeOption { Name = "XL", Status=true },
+			new SizeOption { Name = "XXL", Status=true },
+		};
+				await SizeOptions.AddRangeAsync(sizeOptions);
+				await SaveChangesAsync();
+
+				var topCategory1 = new TopCategory { Name = "男款", Code = "men" };
+				var topCategory2 = new TopCategory { Name = "女款", Code = "women" };
+				var topCategory3 = new TopCategory { Name = "兒童款", Code = "kid" };
+
+				await TopCategories.AddRangeAsync(topCategory1, topCategory2, topCategory3);
+				await SaveChangesAsync();
+
+				var middleCategories = new List<MiddleCategory>();
+				foreach (var item in await TopCategories.ToListAsync())
 				{
-					new SizeOption { Name = "XS", Status=true },
-					new SizeOption { Name = "S", Status=true },
-					new SizeOption { Name = "M", Status=true },
-					new SizeOption { Name = "L", Status=true },
-					new SizeOption { Name = "XL", Status=true },
-					new SizeOption { Name = "XXL", Status=true },
-				};
-				SizeOptions.AddRange(sizeOptions);
-				SaveChanges();
-
-				var topCategory1 = new TopCategory { Name = "男款" , Code = "men" };
-				var topCategory2 = new TopCategory { Name = "女款" , Code = "women" };
-				var topCategory3 = new TopCategory { Name = "兒童款" , Code = "kid" };
-
-				TopCategories.AddRange(topCategory1, topCategory2,topCategory3);
-				SaveChanges();
-
-                foreach (var item in TopCategories)
-                {
-
-					var middleCategory1 = new MiddleCategory { Name = "外套", Code= "coat", TopCategoryId = item.Id };
-					var middleCategory2 = new MiddleCategory { Name = "上衣", Code = "clothes", TopCategoryId = item.Id  };
+					var middleCategory1 = new MiddleCategory { Name = "外套", Code = "coat", TopCategoryId = item.Id };
+					var middleCategory2 = new MiddleCategory { Name = "上衣", Code = "clothes", TopCategoryId = item.Id };
 					var middleCategory3 = new MiddleCategory { Name = "褲子", Code = "pants", TopCategoryId = item.Id };
 					var middleCategory4 = new MiddleCategory { Name = "鞋子", Code = "shoes", TopCategoryId = item.Id };
 
-					MiddleCategories.AddRange(middleCategory1, middleCategory2, middleCategory3, middleCategory4);
+					middleCategories.AddRange(new[] { middleCategory1, middleCategory2, middleCategory3, middleCategory4 });
 				}
+				await MiddleCategories.AddRangeAsync(middleCategories);
+				await SaveChangesAsync();
 
-				SaveChanges();
-
-				foreach (var item in MiddleCategories)
+				var bottomCategories = new List<BottomCategory>();
+				foreach (var item in await MiddleCategories.ToListAsync())
 				{
 					switch (item.Name)
 					{
 						case "外套":
-							var bottomCategory1 = new BottomCategory { Name = "夾克", MiddleCategoryId = item.Id , Code = "jacket" };
-							var bottomCategory2 = new BottomCategory { Name = "風衣", MiddleCategoryId = item.Id , Code = "windbreaker" };
-							var bottomCategory3 = new BottomCategory { Name = "大衣", MiddleCategoryId = item.Id , Code = "cloak" };
-							BottomCategories.AddRange(bottomCategory1, bottomCategory2, bottomCategory3);
+							bottomCategories.Add(new BottomCategory { Name = "夾克", MiddleCategoryId = item.Id, Code = "jacket" });
+							bottomCategories.Add(new BottomCategory { Name = "風衣", MiddleCategoryId = item.Id, Code = "windbreaker" });
+							bottomCategories.Add(new BottomCategory { Name = "大衣", MiddleCategoryId = item.Id, Code = "cloak" });
 							break;
 						case "上衣":
-							var bottomCategory4 = new BottomCategory { Name = "T恤", MiddleCategoryId = item.Id , Code = "t-shirt" };
-							var bottomCategory5 = new BottomCategory { Name = "襯衫", MiddleCategoryId = item.Id , Code = "shirt" };
-							var bottomCategory6 = new BottomCategory { Name = "毛衣", MiddleCategoryId = item.Id , Code = "sweater" };
-							BottomCategories.AddRange(bottomCategory4, bottomCategory5, bottomCategory6);
+							bottomCategories.Add(new BottomCategory { Name = "T恤", MiddleCategoryId = item.Id, Code = "t-shirt" });
+							bottomCategories.Add(new BottomCategory { Name = "襯衫", MiddleCategoryId = item.Id, Code = "shirt" });
+							bottomCategories.Add(new BottomCategory { Name = "毛衣", MiddleCategoryId = item.Id, Code = "sweater" });
 							break;
 						case "褲子":
-							var bottomCategory7 = new BottomCategory { Name = "牛仔褲", MiddleCategoryId = item.Id ,Code = "jeans"};
-							var bottomCategory8 = new BottomCategory { Name = "休閒褲", MiddleCategoryId = item.Id , Code = "casual-pants" };
-							var bottomCategory9 = new BottomCategory { Name = "運動褲", MiddleCategoryId = item.Id , Code = "sweatpants" };
-							BottomCategories.AddRange(bottomCategory7, bottomCategory8, bottomCategory9);
+							bottomCategories.Add(new BottomCategory { Name = "牛仔褲", MiddleCategoryId = item.Id, Code = "jeans" });
+							bottomCategories.Add(new BottomCategory { Name = "休閒褲", MiddleCategoryId = item.Id, Code = "casual-pants" });
+							bottomCategories.Add(new BottomCategory { Name = "運動褲", MiddleCategoryId = item.Id, Code = "sweatpants" });
 							break;
 						case "鞋子":
-							var bottomCategory10 = new BottomCategory { Name = "運動鞋", MiddleCategoryId = item.Id ,Code = "sports-shoes" };
-							var bottomCategory11 = new BottomCategory { Name = "休閒鞋", MiddleCategoryId = item.Id ,Code = "casual-shoes" };
-							var bottomCategory12 = new BottomCategory { Name = "皮鞋", MiddleCategoryId = item.Id,Code = "leather-shoes" };
-							BottomCategories.AddRange(bottomCategory10, bottomCategory11, bottomCategory12);
+							bottomCategories.Add(new BottomCategory { Name = "運動鞋", MiddleCategoryId = item.Id, Code = "sports-shoes" });
+							bottomCategories.Add(new BottomCategory { Name = "休閒鞋", MiddleCategoryId = item.Id, Code = "casual-shoes" });
+							bottomCategories.Add(new BottomCategory { Name = "皮鞋", MiddleCategoryId = item.Id, Code = "leather-shoes" });
 							break;
 					}
 				}
+				await BottomCategories.AddRangeAsync(bottomCategories);
+				await SaveChangesAsync();
 
-				SaveChanges();
-
-				foreach (var item in BottomCategories)
+				foreach (var item in await BottomCategories.ToListAsync())
 				{
 					var products = new List<Product>();
 					for (int i = 0; i < 30; i++)
@@ -176,14 +162,14 @@ namespace FlexCore.Business.Models
 						};
 						products.Add(product);
 					}
-					Products.AddRange(products);
+					await Products.AddRangeAsync(products);
 				}
-				SaveChanges();
+				await SaveChangesAsync();
 
-				foreach (var item in Products)
+				foreach (var item in await Products.ToListAsync())
 				{
 					var productColors = new List<ProductColor>();
-					foreach (var color in ColorOptions)
+					foreach (var color in await ColorOptions.ToListAsync())
 					{
 						var productColor = new ProductColor
 						{
@@ -192,14 +178,14 @@ namespace FlexCore.Business.Models
 						};
 						productColors.Add(productColor);
 					}
-					ProductColors.AddRange(productColors);
+					await ProductColors.AddRangeAsync(productColors);
 				}
-				SaveChanges();
+				await SaveChangesAsync();
 
-				foreach (var item in ProductColors)
+				foreach (var item in await ProductColors.ToListAsync())
 				{
 					var productSizes = new List<ProductSize>();
-					foreach (var size in SizeOptions)
+					foreach (var size in await SizeOptions.ToListAsync())
 					{
 						var productSize = new ProductSize
 						{
@@ -209,10 +195,11 @@ namespace FlexCore.Business.Models
 						};
 						productSizes.Add(productSize);
 					}
-					ProductSizes.AddRange(productSizes);
+					await ProductSizes.AddRangeAsync(productSizes);
 				}
-				SaveChanges();
-			}
+				await SaveChangesAsync();
+			
+		}
 		}
 	}
 }

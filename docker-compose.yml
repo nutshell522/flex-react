@@ -1,0 +1,27 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - mynetwork
+
+  flexcore:
+    build:
+      context: ./FlexCore/FlexCore
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=MyDatabase;User=sa;Password=YourStrong!Passw0rd;"
+    ports:
+      - "5000:80"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

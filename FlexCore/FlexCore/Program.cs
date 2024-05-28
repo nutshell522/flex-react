@@ -40,7 +40,7 @@ using (var scope = app.Services.CreateScope())
 	var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 	dbContext.Database.EnsureDeleted(); // 刪除資料庫
 	dbContext.Database.EnsureCreated(); // 重建資料庫
-	dbContext.SeedData(); // 插入初始數據
+	await dbContext.SeedDataAsync(); // 插入初始數據
 }
 
 app.Run();
