@@ -1,7 +1,7 @@
-﻿namespace FlexCore.Business.Models
+﻿namespace FlexCore.Models.Entities
 {
-    public class ColorOption
-    {
+    public class ColorOptionEntity
+	{
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Color { get; set; }

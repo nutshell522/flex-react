@@ -1,4 +1,4 @@
-using FlexCore.Business.Models;
+using FlexCore.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 

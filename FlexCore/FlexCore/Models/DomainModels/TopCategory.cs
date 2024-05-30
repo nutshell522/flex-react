@@ -1,4 +1,4 @@
-﻿namespace FlexCore.Business.Models
+﻿namespace FlexCore.Models.Entities
 {
     public class TopCategory
     {

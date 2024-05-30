@@ -1,4 +1,4 @@
-﻿namespace FlexCore.Business.Models
+﻿namespace FlexCore.Models.Entities
 {
     public class Product
     {
@@ -10,6 +10,6 @@
         public bool? Status { get; set; }
         public int? BottomCategoryId { get; set; }
         public BottomCategory? BottomCategory { get; set; }
-        public ICollection<ProductColor>? ProductColors { get; set; }
+        public ICollection<ProductColorEntity>? ProductColors { get; set; }
     }
 }
