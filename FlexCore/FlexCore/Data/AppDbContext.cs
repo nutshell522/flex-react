@@ -51,7 +51,7 @@ namespace FlexCore.Data
                 .HasForeignKey(ps => ps.ProductColorId);
 
             modelBuilder.Entity<ProductColorEntity>()
-                .HasMany(pc => pc.productPictures)
+                .HasMany(pc => pc.ProductPictures)
                 .WithOne(pp => pp.ProductColor)
                 .HasForeignKey(pp => pp.ProductColorId);
 

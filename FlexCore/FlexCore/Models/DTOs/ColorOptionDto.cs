@@ -1,9 +1,10 @@
-﻿namespace FlexCore.Models.DomainModels
+﻿namespace FlexCore.Models.DTOs
 {
-    public class SizeOption
+    public class ColorOptionDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public string? Color { get; set; }
         public bool? Status { get; set; }
     }
 }

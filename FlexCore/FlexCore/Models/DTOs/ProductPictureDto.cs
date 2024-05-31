@@ -1,10 +1,10 @@
-﻿namespace FlexCore.Models.DomainModels
+﻿namespace FlexCore.Models.DTOs
 {
-    public class ProductPicture
+    public class ProductPictureDto
     {
         public int Id { get; set; }
         public int ProductColorId { get; set; }
         public string? Url { get; set; }
-        public ProductColor? ProductColor { get; set; }
+        public ProductColorDto? ProductColor { get; set; }
     }
 }

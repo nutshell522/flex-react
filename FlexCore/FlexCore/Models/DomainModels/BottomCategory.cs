@@ -1,5 +1,5 @@
-﻿namespace FlexCore.Models.Entities
-{
+﻿namespace FlexCore.Models.DomainModels
+{   
     public class BottomCategory
     {
         public int? Id { get; set; }

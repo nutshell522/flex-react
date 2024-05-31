@@ -1,4 +1,4 @@
-﻿namespace FlexCore.Models.Entities
+﻿namespace FlexCore.Models.DomainModels
 {
     public class ProductColor
     {
@@ -8,6 +8,6 @@
         public Product? Product { get; set; }
         public ColorOption? ColorOption { get; set; }
         public ICollection<ProductSize>? ProductSize { get; set; }
-        public ICollection<ProductPicture>? productPictures { get; set; }
+        public ICollection<ProductPicture>? ProductPictures { get; set; }
     }
 }

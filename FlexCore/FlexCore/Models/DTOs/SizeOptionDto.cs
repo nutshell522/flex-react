@@ -1,6 +1,6 @@
-﻿namespace FlexCore.Models.DomainModels
+﻿namespace FlexCore.Models.DTOs
 {
-    public class SizeOption
+    public class SizeOptionDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }

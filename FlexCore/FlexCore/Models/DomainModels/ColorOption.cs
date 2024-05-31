@@ -1,4 +1,4 @@
-﻿namespace FlexCore.Models.Entities
+﻿namespace FlexCore.Models.DomainModels
 {
     public class ColorOption
     {

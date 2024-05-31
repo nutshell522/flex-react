@@ -1,4 +1,5 @@
 using FlexCore.Data;
+using FlexCore.Mappings;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -12,6 +13,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // °t¸m DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlServer(connectionString));
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(ProductProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
