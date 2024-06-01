@@ -21,6 +21,7 @@ namespace FlexCore.Repositories.EFRepositories
                 .ThenInclude(bc => bc.MiddleCategory)
                 .ThenInclude(mc => mc.TopCategory)
                 .Include(p => p.ProductColors)
+                .ThenInclude(pc => pc.ColorOption)
                 .AsQueryable();
 
             // 添加分類條件

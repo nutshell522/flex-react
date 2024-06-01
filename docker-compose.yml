@@ -18,7 +18,7 @@ services:
     environment:
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=MyDatabase;User=sa;Password=YourStrong!Passw0rd;"
     ports:
-      - "5000:80"
+      - "8080:80"
     networks:
       - mynetwork
 

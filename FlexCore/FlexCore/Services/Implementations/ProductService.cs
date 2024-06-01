@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using FlexCore.Extentions;
 using FlexCore.Models;
 using FlexCore.Models.DTOs;
+using FlexCore.Models.Entities;
 using FlexCore.Repositories.Interfaces;
 using FlexCore.Services.Interfaces;
 
@@ -21,11 +23,9 @@ namespace FlexCore.Services.Implementations
         {
             try
             {
-                var productEntityPage = await _productRepository.GetProductsPageAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, maxPrice, minPrice);
-                var productDtos = _mapper.Map<IEnumerable<ProductDto>>(productEntityPage.Items).ToList();
-                var productDtoPage = new Page<ProductDto>(productDtos, productEntityPage.TotalCount, productEntityPage.PageIndex, productEntityPage.PageSize);
-
-                return Result<Page<ProductDto>>.Success(productDtoPage);
+                var productEntityPage = await _productRepository.GetProductsPageAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, maxPrice, minPrice); 
+                var productDtoPage = productEntityPage.MapTo<ProductEntity, ProductDto>(_mapper);
+				return Result<Page<ProductDto>>.Success(productDtoPage);
             }
             catch (Exception ex)
             {

@@ -1,5 +1,9 @@
 using FlexCore.Data;
 using FlexCore.Mappings;
+using FlexCore.Repositories.EFRepositories;
+using FlexCore.Repositories.Interfaces;
+using FlexCore.Services.Implementations;
+using FlexCore.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -14,6 +18,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlServer(connectionString));
 
+
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(ProductProfile));
 
@@ -25,13 +33,23 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//	app.UseSwagger();
+//	app.UseSwaggerUI(c =>
+//	{
+//		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+//		c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
+//	});
+//}
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+	c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+	c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
+});
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -46,5 +64,6 @@ using (var scope = app.Services.CreateScope())
 	dbContext.Database.EnsureCreated(); // 重建資料庫
 	await dbContext.SeedDataAsync(); // 插入初始數據
 }
+
 
 app.Run();
