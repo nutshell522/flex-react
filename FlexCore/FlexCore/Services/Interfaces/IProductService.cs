@@ -11,5 +11,7 @@ namespace FlexCore.Services.Interfaces
             int? bottomCategoryId,
             int? maxPrice,
             int? minPrice);
+
+        Task<Result<ProductDto>> GetProductByIdAsync(string id);
     }
 }

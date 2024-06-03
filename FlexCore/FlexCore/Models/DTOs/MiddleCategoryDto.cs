@@ -7,6 +7,5 @@
         public string? Code { get; set; }
         public int? TopCategoryId { get; set; }
         public TopCategoryDto? TopCategory { get; set; }
-        public ICollection<BottomCategoryDto>? BottomCategories { get; set; }
     }
 }

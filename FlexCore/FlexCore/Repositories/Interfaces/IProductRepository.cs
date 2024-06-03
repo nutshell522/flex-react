@@ -13,5 +13,7 @@ namespace FlexCore.Repositories.Interfaces
 			int? maxPrice, 
 			int? minPrice);
 
+		Task<ProductEntity> GetProductByIdAsync(string id);
+
 	}
 }

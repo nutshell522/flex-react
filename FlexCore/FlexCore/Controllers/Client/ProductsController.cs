@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FlexCore.Extentions;
 using FlexCore.Models;
 using FlexCore.Models.DTOs;
 using FlexCore.Models.ViewModels.ClientViewModels.Product;
@@ -31,9 +32,20 @@ namespace FlexCore.Controllers.Client
 				return BadRequest(result.Message);
 			}
 
-			// If you need to map ProductDto to ProductViewModel, use the MapTo extension method again
-			//var productViewModelPage = result.Value.MapTo<ProductDto, ProductViewModel>(_mapper);
-			return Ok(result);
+			var productViewModelPage = result.Data.MapTo<ProductDto, ProductListVM>(_mapper);
+			return Ok(productViewModelPage);
 		}
+
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetProductById(string id)
+        {
+            var result = await _productService.GetProductByIdAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
 	}
 }

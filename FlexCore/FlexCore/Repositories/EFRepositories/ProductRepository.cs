@@ -37,5 +37,21 @@ namespace FlexCore.Repositories.EFRepositories
 
             return await query.ApplyPaginationAsync(pageable);
         }
+
+        public async Task<ProductEntity> GetProductByIdAsync(string id)
+        {
+            return await _db.Products
+                .Include(p => p.BottomCategory)
+                .ThenInclude(bc => bc.MiddleCategory)
+                .ThenInclude(mc => mc.TopCategory)
+                .Include(p => p.ProductColors)
+                .ThenInclude(pc => pc.ColorOption)
+                .Include(p => p.ProductColors)
+                .ThenInclude(pc => pc.ProductPictures)
+                .Include(p => p.ProductColors)
+                .ThenInclude(pc => pc.ProductSize)
+                .ThenInclude(ps => ps.SizeOption)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

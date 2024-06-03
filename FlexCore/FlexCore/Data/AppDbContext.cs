@@ -153,7 +153,7 @@ namespace FlexCore.Data
                     {
                         var product = new ProductEntity
 						{
-                            Id = $"{item.MiddleCategory.TopCategory.Code}-{item.Code}{i.ToString("000")}",
+                            Id = $"{item.MiddleCategory.TopCategory.Code}_{item.Code}{i.ToString("000")}",
                             Name = $"{item.MiddleCategory.TopCategory.Name}{item.Name}{i}",
                             BottomCategoryId = item.Id,
                             Description = "清爽，時尚",

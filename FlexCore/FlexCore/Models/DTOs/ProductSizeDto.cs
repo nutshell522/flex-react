@@ -7,6 +7,5 @@
         public int ProductColorId { get; set; }
         public int Stock { get; set; }
         public SizeOptionDto? SizeOption { get; set; }
-        public ProductColorDto? ProductColor { get; set; }
     }
 }

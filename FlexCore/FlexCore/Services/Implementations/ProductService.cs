@@ -32,5 +32,19 @@ namespace FlexCore.Services.Implementations
                 return Result<Page<ProductDto>>.Failure(ex.Message);
             }
         }
+
+        public async Task<Result<ProductDto>> GetProductByIdAsync(string id)
+        {
+            try
+            {
+                var productEntity = await _productRepository.GetProductByIdAsync(id);
+                var productDto = _mapper.Map<ProductDto>(productEntity);
+                return Result<ProductDto>.Success(productDto);
+            }
+            catch (Exception ex)
+            {
+                return Result<ProductDto>.Failure(ex.Message);
+            }
+        }
     }
 }
