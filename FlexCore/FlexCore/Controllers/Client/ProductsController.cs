@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlexCore.Controllers.Client
 {
-	[Route("api/[controller]")]
+	[Route("api/client/[controller]")]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
@@ -22,10 +22,17 @@ namespace FlexCore.Controllers.Client
 			_productService = productService;
 			_mapper = mapper;
 		}
-		[HttpGet]
-		public async Task<IActionResult> GetProducts([FromQuery] Pageable pageable, [FromQuery] int? topCategoryId, [FromQuery] int? middleCategoryId, [FromQuery] int? bottomCategoryId, [FromQuery] int? maxPrice, [FromQuery] int? minPrice)
+		[HttpPost("search")]
+		public async Task<IActionResult> SearchProducts([FromBody] ProductListSearchCriteria criteria)
 		{
-			var result = await _productService.GetPageProductAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, maxPrice, minPrice);
+			var result = await _productService.GetPageProductAsync(
+				criteria.Pageable,
+				criteria.TopCategoryId,
+				criteria.MiddleCategoryId,
+				criteria.BottomCategoryId,
+				criteria.MaxPrice,
+				criteria.MinPrice
+			);
 
 			if (!result.IsSuccess)
 			{
@@ -35,6 +42,8 @@ namespace FlexCore.Controllers.Client
 			var productViewModelPage = result.Data.MapTo<ProductDto, ProductListVM>(_mapper);
 			return Ok(productViewModelPage);
 		}
+
+
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetProductById(string id)
