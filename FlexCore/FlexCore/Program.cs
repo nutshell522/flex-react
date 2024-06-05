@@ -21,6 +21,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ITopCategoryService, TopCategoryService>();
+builder.Services.AddScoped<ITopCategoryRepository, TopCategoryRepository>();
+builder.Services.AddScoped<IMiddleCategoryService, MiddleCategoryService>();
+builder.Services.AddScoped<IMiddleCategoryRepository, MiddleCategoryRepository>();
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(EntityToDtoProfile));
@@ -34,24 +38,19 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//	app.UseSwagger();
-//	app.UseSwaggerUI(c =>
-//	{
-//		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-//		c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
-//	});
-//}
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment())
 {
-	c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-	c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
-});
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+		c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
+	});
+}
 
 //app.UseHttpsRedirection();
 
+app.UseStaticFiles(); // 確保可以提供靜態文件
 app.UseAuthorization();
 
 app.MapControllers();

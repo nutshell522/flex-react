@@ -6,14 +6,14 @@
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
-        public List<T> Items { get; set; }
+        public IEnumerable<T> Items { get; set; }
 
         public Page()
         {
             Items = new List<T>();
         }
 
-        public Page(List<T> items, int count, int pageIndex, int pageSize)
+        public Page(IEnumerable<T> items, int count, int pageIndex, int pageSize)
         {
             TotalCount = count;
             PageSize = pageSize;

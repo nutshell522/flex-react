@@ -9,6 +9,6 @@ namespace FlexCore.Models.ViewModels.ClientViewModels.Product
         public string? Description { get; set; }
         public int? UnitPrice { get; set; }
         public int SalesPrice { get; set; }
-        public List<ProductColorVM>? ProductColors { get; set; }
+        public ICollection<ProductColorIndexVM>? ProductColors { get; set; }
     }
 }

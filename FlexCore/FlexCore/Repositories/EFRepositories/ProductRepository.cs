@@ -7,21 +7,39 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlexCore.Repositories.EFRepositories
 {
+    /// <summary>
+    /// 商品Repository
+    /// </summary>
     public class ProductRepository : IProductRepository
     {
         private readonly AppDbContext _db;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
         public ProductRepository(AppDbContext db)
         {
             _db = db;
         }
+
+        /// <summary>
+        /// 取得商品分頁
+        /// </summary>
+        /// <param name="pageable"></param>
+        /// <param name="topCategoryId"></param>
+        /// <param name="middleCategoryId"></param>
+        /// <param name="bottomCategoryId"></param>
+        /// <param name="maxPrice"></param>
+        /// <param name="minPrice"></param>
+        /// <returns></returns>
         public async Task<Page<ProductEntity>> GetProductsPageAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId, int? maxPrice, int? minPrice)
         {
             var query = _db.Products
-                .Include(p => p.BottomCategory)
-                .ThenInclude(bc => bc.MiddleCategory)
-                .ThenInclude(mc => mc.TopCategory)
                 .Include(p => p.ProductColors)
-                .ThenInclude(pc => pc.ColorOption)
+				.ThenInclude(pc => pc.ColorOption)
+                .Include(p => p.ProductColors)
+                .ThenInclude(pc => pc.ProductPictures)
                 .AsQueryable();
 
             // 添加分類條件
@@ -38,6 +56,11 @@ namespace FlexCore.Repositories.EFRepositories
             return await query.ApplyPaginationAsync(pageable);
         }
 
+        /// <summary>
+        /// 取得商品
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ProductEntity> GetProductByIdAsync(string id)
         {
             return await _db.Products
@@ -49,7 +72,7 @@ namespace FlexCore.Repositories.EFRepositories
                 .Include(p => p.ProductColors)
                 .ThenInclude(pc => pc.ProductPictures)
                 .Include(p => p.ProductColors)
-                .ThenInclude(pc => pc.ProductSize)
+                .ThenInclude(pc => pc.ProductSizes)
                 .ThenInclude(ps => ps.SizeOption)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }

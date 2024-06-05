@@ -19,32 +19,18 @@ namespace FlexCore.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<Result<Page<ProductDto>>> GetPageProductAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId, int? maxPrice, int? minPrice)
+        public async Task<Page<ProductDto>> GetPageProductAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId, int? maxPrice, int? minPrice)
         {
-            try
-            {
-                var productEntityPage = await _productRepository.GetProductsPageAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, maxPrice, minPrice); 
-                var productDtoPage = productEntityPage.MapTo<ProductEntity, ProductDto>(_mapper);
-				return Result<Page<ProductDto>>.Success(productDtoPage);
-            }
-            catch (Exception ex)
-            {
-                return Result<Page<ProductDto>>.Failure(ex.Message);
-            }
+            var productEntityPage = await _productRepository.GetProductsPageAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, maxPrice, minPrice); 
+            var productDtoPage = productEntityPage.MapTo<ProductEntity, ProductDto>(_mapper);
+			return productDtoPage;
         }
 
-        public async Task<Result<ProductDto>> GetProductByIdAsync(string id)
+        public async Task<ProductDto> GetProductByIdAsync(string id)
         {
-            try
-            {
-                var productEntity = await _productRepository.GetProductByIdAsync(id);
-                var productDto = _mapper.Map<ProductDto>(productEntity);
-                return Result<ProductDto>.Success(productDto);
-            }
-            catch (Exception ex)
-            {
-                return Result<ProductDto>.Failure(ex.Message);
-            }
+            var productEntity = await _productRepository.GetProductByIdAsync(id);
+            var productDto = _mapper.Map<ProductDto>(productEntity);
+            return productDto;
         }
     }
 }

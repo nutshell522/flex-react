@@ -8,7 +8,8 @@ namespace FlexCore.Models.Entities
         public string? Name { get; set; }
         public string? Code { get; set; }
         public int? MiddleCategoryId { get; set; }
-        public MiddleCategoryEntity? MiddleCategory { get; set; }
+		[JsonIgnore]
+		public MiddleCategoryEntity? MiddleCategory { get; set; }
 
         [JsonIgnore]
         public ICollection<ProductEntity>? Products { get; set; }

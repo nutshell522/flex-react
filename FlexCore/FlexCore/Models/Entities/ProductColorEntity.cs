@@ -10,7 +10,7 @@ namespace FlexCore.Models.Entities
         [JsonIgnore]
         public ProductEntity? Product { get; set; }
         public ColorOptionEntity? ColorOption { get; set; }
-        public ICollection<ProductSizeEntity>? ProductSize { get; set; }
+        public ICollection<ProductSizeEntity>? ProductSizes { get; set; }
         public ICollection<ProductPictureEntity>? ProductPictures { get; set; }
     }
 }

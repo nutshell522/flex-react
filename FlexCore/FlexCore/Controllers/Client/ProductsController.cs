@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using FlexCore.Extentions;
-using FlexCore.Models;
 using FlexCore.Models.DTOs;
+using FlexCore.Models.ViewModels.Client.Product;
 using FlexCore.Models.ViewModels.ClientViewModels.Product;
 using FlexCore.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlexCore.Controllers.Client
@@ -34,13 +33,8 @@ namespace FlexCore.Controllers.Client
 				criteria.MinPrice
 			);
 
-			if (!result.IsSuccess)
-			{
-				return BadRequest(result.Message);
-			}
-
-			var productViewModelPage = result.Data.MapTo<ProductDto, ProductListVM>(_mapper);
-			return Ok(productViewModelPage);
+			var vm = result.MapTo<ProductDto, ProductListVM>(_mapper);
+			return Ok(vm);
 		}
 
 
@@ -50,11 +44,9 @@ namespace FlexCore.Controllers.Client
         {
             var result = await _productService.GetProductByIdAsync(id);
 
-            if (!result.IsSuccess)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
+			var vm = _mapper.Map<ProductDto, ProductVM>(result);
+
+			return Ok(vm);
         }
 	}
 }

@@ -9,7 +9,6 @@
         public int SalesPrice { get; set; }
         public bool? Status { get; set; }
         public int? BottomCategoryId { get; set; }
-        public BottomCategoryDto? BottomCategory { get; set; }
         public ICollection<ProductColorDto>? ProductColors { get; set; }
     }
 }

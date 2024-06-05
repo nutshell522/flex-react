@@ -1,4 +1,6 @@
-﻿namespace FlexCore.Models.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace FlexCore.Models.Entities
 {
     public class ProductEntity
 	{
@@ -9,7 +11,8 @@
         public int SalesPrice { get; set; }
         public bool? Status { get; set; }
         public int? BottomCategoryId { get; set; }
-        public BottomCategoryEntity? BottomCategory { get; set; }
+		[JsonIgnore]
+		public BottomCategoryEntity? BottomCategory { get; set; }
         public ICollection<ProductColorEntity>? ProductColors { get; set; }
     }
 }

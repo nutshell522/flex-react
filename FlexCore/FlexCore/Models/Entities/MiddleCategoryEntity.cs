@@ -9,9 +9,8 @@ namespace FlexCore.Models.Entities
         public string? Code { get; set; }
         public int? TopCategoryId { get; set; }
 
-        public virtual TopCategoryEntity? TopCategory { get; set; }
-
-        [JsonIgnore]
+		[JsonIgnore]
+		public virtual TopCategoryEntity? TopCategory { get; set; }
         public virtual ICollection<BottomCategoryEntity>? BottomCategories { get; set; }
     }
 }

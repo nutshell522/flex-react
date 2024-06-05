@@ -46,7 +46,7 @@ namespace FlexCore.Data
                 .HasForeignKey(pc => pc.ProductId);
 
             modelBuilder.Entity<ProductColorEntity>()
-                .HasMany(pc => pc.ProductSize)
+                .HasMany(pc => pc.ProductSizes)
                 .WithOne(ps => ps.ProductColor)
                 .HasForeignKey(ps => ps.ProductColorId);
 
@@ -185,6 +185,20 @@ namespace FlexCore.Data
 
                 foreach (var item in await ProductColors.ToListAsync())
                 {
+                    var productPictures = new List<ProductPictureEntity>();
+                    var productPicture1 = new ProductPictureEntity
+					{
+						ProductColorId = item.Id,
+						Url = "product_default_picture.jpg"
+					};
+                    var productPicture2 = new ProductPictureEntity
+                    {
+                        ProductColorId = item.Id,
+						Url = "product_default_picture.jpg"
+					};
+                    productPictures.AddRange(new[] { productPicture1, productPicture2 });
+                    await ProductPictures.AddRangeAsync(productPictures);
+
                     var productSizes = new List<ProductSizeEntity>();
                     foreach (var size in await SizeOptions.ToListAsync())
                     {
