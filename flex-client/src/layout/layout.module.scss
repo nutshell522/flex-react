@@ -1,0 +1,439 @@
+@mixin reset-styles {
+  padding: 0;
+  margin: 0;
+  color: #333;
+
+  a {
+    text-decoration: none;
+    color: #333;
+  }
+
+  ul {
+    li {
+      list-style: none;
+    }
+  }
+}
+
+$header-height: 36px;
+$nav-height: 60px;
+$bg-gray: #f5f5f5;
+
+.text-link {
+  &:hover {
+    color: #888;
+  }
+}
+
+* {
+  @include reset-styles;
+}
+
+.p-relative {
+  position: relative;
+}
+
+.header {
+  background-color: #f5f5f5;
+  height: $header-height;
+  padding: 0 50px 0 40px;
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 991px) {
+    display: none;
+  }
+
+  .header-left {
+    margin-right: auto;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    .header-right-item {
+      font-size: 12px;
+      font-weight: bold;
+      &:not(:last-child)::after {
+        margin: 0 12px;
+        content: '|';
+      }
+    }
+  }
+}
+
+.nav-height {
+  height: $nav-height;
+}
+
+.nav {
+  @extend .nav-height;
+  background-color: #fff;
+
+  position: relative;
+  top: 0;
+  z-index: 2000;
+
+  & > .left,
+  & > .right {
+    @extend .nav-height;
+    position: absolute;
+  }
+
+  & > .left {
+    @extend .nav-height;
+    position: absolute;
+    left: 40px;
+
+    & > .logo-wrapper {
+      @extend .nav-height;
+      width: 80px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+
+      &:hover {
+        h1 {
+          color: #777;
+        }
+
+        .logo {
+          opacity: 0.7;
+        }
+      }
+
+      .logo {
+        width: 100%;
+        object-fit: cover;
+      }
+
+      & > h1 {
+        line-height: $nav-height;
+        font-weight: bold;
+        font-size: 40px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+    .center-bg {
+      visibility: hidden;
+      opacity: 0;
+      backdrop-filter: blur(3px);
+      z-index: 5100;
+      transition: 0.3s;
+      background-color: rgba($color: #000, $alpha: 0.3);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+  }
+
+  & > .center {
+    @media screen and (max-width: 991px) {
+      position: fixed;
+      background-color: #fff;
+      top: 0;
+      right: -303px;
+      width: 303px;
+      height: 100vh;
+      z-index: 8000;
+      padding: 40px 50px 150px 50px;
+      overflow-y: scroll;
+      transition: 0.3s;
+
+      &.active {
+        right: 0;
+
+        + .center-bg {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+
+      .icons {
+        div {
+          margin: 10px 0;
+
+          a {
+            font-size: 18px;
+            display: block;
+            width: 100%;
+
+            &:hover {
+              color: #777;
+
+              i {
+                color: #777;
+              }
+            }
+
+            i {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+
+      .btn-close {
+        padding: 7px;
+        background-color: #fff;
+        border: 1px solid #777;
+        border-radius: 50px;
+
+        &:hover {
+          background-color: #ddd;
+        }
+      }
+
+      .userPhoto-component {
+        border: #777 2px solid;
+        border-radius: 50px;
+      }
+
+      ul {
+        margin-top: 20px;
+        padding: 0;
+        font-size: 28px;
+        margin-bottom: 100px;
+
+        li {
+          margin-bottom: 15px;
+
+          div {
+            &:hover {
+              color: #777;
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (min-width: 992px) {
+      height: 100%;
+      left: 50%;
+      transform: translate(-50%);
+      position: absolute;
+
+      & > .center-ul {
+        display: flex;
+        height: 100%;
+        & > .nav-list-item {
+          height: 100%;
+          width: 100px;
+          position: relative;
+
+          & > .nav-btn {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+          }
+
+          &:hover {
+            border-bottom: 3px solid black;
+          }
+        }
+      }
+    }
+  }
+
+  .right {
+    right: 40px;
+    display: flex;
+    align-items: center;
+
+    .nav-icon {
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50px;
+      width: 20px;
+      height: 20px;
+      overflow: visible;
+      border: 9px solid transparent;
+
+      cursor: pointer;
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: end;
+
+      .search-bar {
+        background-color: $bg-gray;
+        padding: 10px 10px 10px 40px;
+        border-radius: 50px;
+        border: none;
+        height: 36px;
+        font: 18px bold;
+        &::placeholder {
+          font-weight: 600;
+        }
+
+        @media screen and (min-width: 992px) {
+          width: 180px;
+        }
+
+        @media screen and (max-width: 991px) {
+          visibility: hidden;
+          width: 0px;
+
+          &.active {
+            visibility: visible;
+            width: calc(100% - 20px);
+
+            + .bi-search {
+              left: calc(4px + 20px);
+            }
+          }
+        }
+
+        &:hover {
+          background-color: #dfdfdf;
+          border-color: #dfdfdf;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .search-icon {
+        @extend .nav-icon;
+        @media screen and (min-width: 992px) {
+          position: absolute;
+          left: 0px;
+          top: -1px;
+        }
+
+        &:hover {
+          background-color: #dfdfdf;
+        }
+      }
+    }
+
+    .nav-bar-btn {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+      @media screen and (max-width: 991px) {
+        &:not(:last-child) {
+          margin-left: -15px;
+        }
+      }
+      @media screen and (min-width: 992px) {
+        &.btn-list {
+          display: none;
+        }
+      }
+
+      .nav-bar-icon {
+        @extend .nav-icon;
+        margin-left: 10px;
+      }
+
+      &:hover .nav-bar-icon {
+        background-color: #dfdfdf;
+      }
+
+      .count {
+        cursor: pointer;
+        position: absolute;
+        top: 40%;
+        left: 53%;
+        font-size: 12px;
+      }
+
+      .countFavorites {
+        cursor: pointer;
+        position: absolute;
+        top: 35%;
+        left: 53%;
+        font-size: 12px;
+      }
+
+      .drap {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        height: 0;
+        max-height: 0;
+        width: 350px;
+        z-index: 999;
+        border: 1px solid rgba($color: #fff, $alpha: 0);
+        transition: max-height 0.3s;
+        overflow-y: scroll;
+        visibility: hidden;
+
+        .cart-img-wrapper {
+          width: 85px;
+          height: 85px;
+        }
+
+        /* Webkit (Chrome, Safari) */
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: #888;
+          border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background-color: #555;
+        }
+
+        /* Firefox */
+        &::-moz-scrollbar {
+          width: 8px;
+        }
+
+        &::-moz-scrollbar-thumb {
+          background-color: #888;
+          border-radius: 4px;
+        }
+
+        &::-moz-scrollbar-thumb:hover {
+          background-color: #555;
+        }
+      }
+
+      &:hover .drap {
+        background-color: #fff;
+        border-color: #333;
+        visibility: visible;
+        height: 300px;
+        max-height: 300px;
+      }
+    }
+  }
+}
+
+.nav-dtail-wrapper {
+  background-color: black;
+  width: 100%;
+  height: 100px;
+  position: sticky;
+  top: 0px;
+}
+
+.a {
+  width: 100vm;
+  height: 200vh;
+  background-color: #aaa;
+}

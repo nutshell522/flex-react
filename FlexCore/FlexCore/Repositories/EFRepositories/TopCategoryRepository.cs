@@ -14,7 +14,10 @@ namespace FlexCore.Repositories.EFRepositories
 		}
 		public async Task<IEnumerable<TopCategoryEntity>> GetTopCategoriesAsync()
 		{
-			return await _db.TopCategories.ToListAsync();
+			return await _db.TopCategories
+				.Include(tc => tc.MiddleCategories)
+				.ThenInclude(mc => mc.BottomCategories)
+				.ToListAsync();
 		}
 	}
 }

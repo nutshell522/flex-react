@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FlexCore.Models.ViewModels.Client.TopCategory;
 using FlexCore.Services.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlexCore.Controllers.Client

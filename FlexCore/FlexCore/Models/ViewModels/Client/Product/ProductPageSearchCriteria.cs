@@ -1,6 +1,6 @@
 ﻿namespace FlexCore.Models.ViewModels.ClientViewModels.Product
 {
-	public class ProductListSearchCriteria
+	public class ProductPageSearchCriteria
 	{
 		public Pageable Pageable { get; set; }
 		public int? TopCategoryId { get; set; }

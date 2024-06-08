@@ -22,7 +22,7 @@ namespace FlexCore.Controllers.Client
 			_mapper = mapper;
 		}
 		[HttpPost("search")]
-		public async Task<IActionResult> SearchProducts([FromBody] ProductListSearchCriteria criteria)
+		public async Task<IActionResult> SearchProducts([FromBody] ProductPageSearchCriteria criteria)
 		{
 			var result = await _productService.GetPageProductAsync(
 				criteria.Pageable,

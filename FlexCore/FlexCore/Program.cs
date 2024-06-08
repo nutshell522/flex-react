@@ -31,6 +31,7 @@ builder.Services.AddAutoMapper(typeof(EntityToDtoProfile));
 builder.Services.AddAutoMapper(typeof(ProductViewModelProfile));
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -52,6 +53,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles(); // 確保可以提供靜態文件
 app.UseAuthorization();
+
+app.UseCors(options =>
+{
+	options.AllowAnyOrigin()
+		   .AllowAnyHeader()
+		   .AllowAnyMethod();
+});
 
 app.MapControllers();
 
