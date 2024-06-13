@@ -7,9 +7,19 @@ import {
   Bag as BagIcon,
 } from 'react-bootstrap-icons';
 import useCategoryAPI, { TopCategory } from '../../hooks/topCategoryHook';
+import { useState } from 'react';
 
 const Nav: React.FC = () => {
+  const [activeNavDetail, setActiveNavDetail] = useState<number | null>(null);
   const { topCategories } = useCategoryAPI();
+
+  const handleMouseEnter = (id: number) => {
+    setActiveNavDetail(id);
+  };
+
+  const handleMouseLeave = (id: number) => {
+    setActiveNavDetail((prevValue) => (prevValue === id ? null : prevValue));
+  };
 
   return (
     <>
@@ -27,8 +37,17 @@ const Nav: React.FC = () => {
         <div className={`${styles['center']}`}>
           <ul className={`${styles['center-ul']}`}>
             {topCategories.map((item: TopCategory) => (
-              <li key={item.id} className={styles['nav-list-item']}>
-                <Link to={`/${item.code}`} className={styles['nav-btn']}>
+              <li
+                key={item.id}
+                className={styles['nav-list-item']}
+                onMouseEnter={() => handleMouseEnter(item.id)}
+                onMouseLeave={() => handleMouseLeave(item.id)}
+              >
+                <Link
+                  to={`/${item.code}`}
+                  className={styles['nav-btn']}
+                  state={{ topCategoryId: item.id }}
+                >
                   {item.name}
                 </Link>
               </li>
@@ -72,9 +91,43 @@ const Nav: React.FC = () => {
           </Link>
         </div>
       </nav>
-
-      <div className={styles['nav-dtail-wrapper']}></div>
-
+      {topCategories.map((item: TopCategory) => (
+        <div
+          key={item.id}
+          className={`${styles['nav-detail-wrapper']} ${
+            activeNavDetail === item.id ? styles['active'] : ''
+          }`}
+          onMouseEnter={() => handleMouseEnter(item.id)}
+          onMouseLeave={() => handleMouseLeave(item.id)}
+        >
+          <div className={styles['nav-detail-area']}>
+            {item.middleCategories.map((middlecategory) => (
+              <div
+                key={middlecategory.id}
+                className={styles['nav-detail-block']}
+              >
+                <Link to={`/${middlecategory.code}`}>
+                  <h3 className={styles['nav-detail-item-title']}>
+                    {middlecategory.name}
+                  </h3>
+                </Link>
+                <ul className={styles['nav-detail-item-ul']}>
+                  {middlecategory.bottomCategories.map((bottomcategory) => (
+                    <li
+                      key={bottomcategory.id}
+                      className={styles['nav-detail-item-li']}
+                    >
+                      <Link to={`/${bottomcategory.code}`}>
+                        {bottomcategory.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
       <div className={styles['a']}></div>
     </>
   );

@@ -10,6 +10,7 @@ namespace FlexCore.Repositories.Interfaces
 			int? topCategoryId,
 			int? middleCategoryId,
 			int? bottomCategoryId,
+			string name,
 			int? maxPrice, 
 			int? minPrice);
 

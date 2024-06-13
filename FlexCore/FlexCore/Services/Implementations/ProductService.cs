@@ -19,9 +19,9 @@ namespace FlexCore.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<Page<ProductDto>> GetPageProductAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId, int? maxPrice, int? minPrice)
+        public async Task<Page<ProductDto>> GetPageProductAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId,string name, int? maxPrice, int? minPrice)
         {
-            var productEntityPage = await _productRepository.GetProductsPageAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, maxPrice, minPrice); 
+            var productEntityPage = await _productRepository.GetProductsPageAsync(pageable, topCategoryId, middleCategoryId, bottomCategoryId, name,maxPrice, minPrice); 
             var productDtoPage = productEntityPage.MapTo<ProductEntity, ProductDto>(_mapper);
 			return productDtoPage;
         }

@@ -33,7 +33,7 @@ namespace FlexCore.Repositories.EFRepositories
         /// <param name="maxPrice"></param>
         /// <param name="minPrice"></param>
         /// <returns></returns>
-        public async Task<Page<ProductEntity>> GetProductsPageAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId, int? maxPrice, int? minPrice)
+        public async Task<Page<ProductEntity>> GetProductsPageAsync(Pageable pageable, int? topCategoryId, int? middleCategoryId, int? bottomCategoryId,string name ,int? maxPrice, int? minPrice)
         {
             var query = _db.Products
                 .Include(p => p.ProductColors)
@@ -46,6 +46,9 @@ namespace FlexCore.Repositories.EFRepositories
             query = query.Where(p => !topCategoryId.HasValue || p.BottomCategory.MiddleCategory.TopCategoryId == topCategoryId.Value);
             query = query.Where(p => !middleCategoryId.HasValue || p.BottomCategory.MiddleCategoryId == middleCategoryId.Value);
             query = query.Where(p => !bottomCategoryId.HasValue || p.BottomCategoryId == bottomCategoryId.Value);
+
+            // 添加名稱條件
+            query = query.Where(p => string.IsNullOrEmpty(name) || p.Name.Contains(name));
 
             // 添加價格條件
             query = query.Where(p => !maxPrice.HasValue || p.SalesPrice <= maxPrice.Value);

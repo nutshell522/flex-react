@@ -29,6 +29,7 @@ namespace FlexCore.Controllers.Client
 				criteria.TopCategoryId,
 				criteria.MiddleCategoryId,
 				criteria.BottomCategoryId,
+				criteria.Name,
 				criteria.MaxPrice,
 				criteria.MinPrice
 			);

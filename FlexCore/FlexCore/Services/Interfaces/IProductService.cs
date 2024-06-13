@@ -9,6 +9,7 @@ namespace FlexCore.Services.Interfaces
             int? topCategoryId,
             int? middleCategoryId,
             int? bottomCategoryId,
+            string name,
             int? maxPrice,
             int? minPrice);
 
