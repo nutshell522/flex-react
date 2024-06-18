@@ -6,7 +6,7 @@
 		public int? TopCategoryId { get; set; }
 		public int? MiddleCategoryId { get; set; }
 		public int? BottomCategoryId { get; set; }
-		public string Name { get; set; }
+		public string? Name { get; set; }
 		public int? MaxPrice { get; set; }
 		public int? MinPrice { get; set; }
 	}

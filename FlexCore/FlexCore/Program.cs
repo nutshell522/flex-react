@@ -41,15 +41,22 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 // 配置 HTTP 請求管道
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//	app.UseSwagger();
+//	app.UseSwaggerUI(c =>
+//	{
+//		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+//		c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
+//	});
+//}
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-	app.UseSwagger();
-	app.UseSwaggerUI(c =>
-	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-		c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
-	});
-}
+	c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+	c.RoutePrefix = string.Empty; // Serve the Swagger UI at the app's root
+});
 
 app.UseHttpsRedirection();
 
