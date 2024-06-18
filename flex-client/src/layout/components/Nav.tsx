@@ -44,7 +44,7 @@ const Nav: React.FC = () => {
                 onMouseLeave={() => handleMouseLeave(item.id)}
               >
                 <Link
-                  to={`/${item.code}`}
+                  to={`/${item.id}`}
                   className={styles['nav-btn']}
                   state={{ topCategoryId: item.id }}
                 >
@@ -106,7 +106,7 @@ const Nav: React.FC = () => {
                 key={middlecategory.id}
                 className={styles['nav-detail-block']}
               >
-                <Link to={`/${middlecategory.code}`}>
+                <Link to={`/${item.id}_${middlecategory.id}`}>
                   <h3 className={styles['nav-detail-item-title']}>
                     {middlecategory.name}
                   </h3>
@@ -117,7 +117,9 @@ const Nav: React.FC = () => {
                       key={bottomcategory.id}
                       className={styles['nav-detail-item-li']}
                     >
-                      <Link to={`/${bottomcategory.code}`}>
+                      <Link
+                        to={`/${item.id}_${middlecategory.id}_${bottomcategory.id}`}
+                      >
                         {bottomcategory.name}
                       </Link>
                     </li>
