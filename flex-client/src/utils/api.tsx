@@ -1,19 +1,37 @@
 import axios, { AxiosResponse } from 'axios';
 import config from '../config.tsx';
 import { TopCategory } from '../hooks/topCategoryHook.tsx';
-import { IProductIndex } from '../page/Product/components/Products.tsx';
+import { IProductIndex } from '../hooks/productHook.tsx';
 
-interface Page<T> {
-  content: T[];
+interface IPage<T> {
+  items: T[];
+  pageIndex: number;
+  pageSize: number;
   totalPages: number;
-  totalElements: number;
-  last: boolean;
+  totalCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface IPageable {
+  page: number;
   size: number;
-  number: number;
-  sort: unknown;
-  first: boolean;
-  numberOfElements: number;
-  empty: boolean;
+  sort?: ISort[];
+}
+
+export interface ISort {
+  by: string;
+  direction: string;
+}
+
+export interface IProductSearchParamReq {
+  pageable?: IPageable;
+  topCategoryId?: number;
+  middleCategoryId?: number;
+  bottomCategoryId?: number;
+  name?: string;
+  maxPrice?: number;
+  minPrice?: number;
 }
 
 const axiosInstance = axios.create({
@@ -27,7 +45,9 @@ export class TopCategoryApi {
 }
 
 export class ProductApi {
-  private static readonly path = '/Product';
-  static get = (): Promise<AxiosResponse<Page<IProductIndex>>> =>
-    axiosInstance.get(this.path);
+  private static readonly path = '/Products';
+  static search = (searchParam: IProductSearchParamReq): Promise<AxiosResponse<IPage<IProductIndex>>> =>
+    axiosInstance.post(`${this.path}/search`, searchParam);
+  static getById = (id: number): Promise<AxiosResponse<IProductIndex>> =>
+    axiosInstance.get(`${this.path}/${id}`);
 }

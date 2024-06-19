@@ -1,16 +1,14 @@
-export interface IProductIndex {
-    id: number;
-    name: string;
-    code: string;
-    originPrice: number;
-    unitPrice: number;
-    image: string;
-}
+import { IProductIndex } from "../../../hooks/productHook";
+import Card from "./Card";
 
-const Products: React.FC = () => {
+
+const Products: React.FC<{ products: IProductIndex[] }> = ({ products }) => {
+
     return (
         <div>
-            <h1>Products</h1>
+            {products.map((product) => (
+                <Card key={product.id} product={product} />
+            ))}
         </div>
     )
 }

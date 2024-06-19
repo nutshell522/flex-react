@@ -44,7 +44,7 @@ const Nav: React.FC = () => {
                 onMouseLeave={() => handleMouseLeave(item.id)}
               >
                 <Link
-                  to={`/${item.id}`}
+                  to={`/w/${item.code}-${item.id}`}
                   className={styles['nav-btn']}
                   state={{ topCategoryId: item.id }}
                 >
@@ -94,9 +94,8 @@ const Nav: React.FC = () => {
       {topCategories.map((item: TopCategory) => (
         <div
           key={item.id}
-          className={`${styles['nav-detail-wrapper']} ${
-            activeNavDetail === item.id ? styles['active'] : ''
-          }`}
+          className={`${styles['nav-detail-wrapper']} ${activeNavDetail === item.id ? styles['active'] : ''
+            }`}
           onMouseEnter={() => handleMouseEnter(item.id)}
           onMouseLeave={() => handleMouseLeave(item.id)}
         >
@@ -106,7 +105,7 @@ const Nav: React.FC = () => {
                 key={middlecategory.id}
                 className={styles['nav-detail-block']}
               >
-                <Link to={`/${item.id}_${middlecategory.id}`}>
+                <Link to={`/w/${item.code}-${item.id}-${middlecategory.id}`}>
                   <h3 className={styles['nav-detail-item-title']}>
                     {middlecategory.name}
                   </h3>
@@ -118,7 +117,7 @@ const Nav: React.FC = () => {
                       className={styles['nav-detail-item-li']}
                     >
                       <Link
-                        to={`/${item.id}_${middlecategory.id}_${bottomcategory.id}`}
+                        to={`/w/${item.code}-${item.id}-${middlecategory.id}-${bottomcategory.id}`}
                       >
                         {bottomcategory.name}
                       </Link>
@@ -130,7 +129,7 @@ const Nav: React.FC = () => {
           </div>
         </div>
       ))}
-      <div className={styles['a']}></div>
+      {/* <div className={styles['a']}></div> */}
     </>
   );
 };
