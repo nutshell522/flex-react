@@ -5,7 +5,7 @@ import Products from "./Products";
 
 const ProductFilter: React.FC<{ searchStr: string }> = ({ searchStr }) => {
 
-    const { products, setSearchParam, loading } = useProductAPI();
+    const { products, setSearchParam, loading, nextPage } = useProductAPI();
     const { setIsLoading } = useLoaderContext();
 
     useEffect(() => {
@@ -22,6 +22,7 @@ const ProductFilter: React.FC<{ searchStr: string }> = ({ searchStr }) => {
     return (
         <div className="product-filter">
             <Products products={products} />
+            <button onClick={nextPage}>按我</button>
         </div>
     )
 }
