@@ -20,6 +20,7 @@ namespace FlexCore.Mappings
             CreateMap<ProductColorEntity, ProductColorDto>().ReverseMap();
             CreateMap<ProductSizeEntity, ProductSizeDto>().ReverseMap();
             CreateMap<ProductPictureEntity, ProductPictureDto>().ReverseMap();
+            CreateMap<UserEntity, UserDto>().ReverseMap();
         }
 	}
 }

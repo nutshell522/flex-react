@@ -21,6 +21,7 @@ namespace FlexCore.Data
         public DbSet<ColorOptionEntity> ColorOptions { get; set; }
         public DbSet<SizeOptionEntity> SizeOptions { get; set; }
         public DbSet<ProductPictureEntity> ProductPictures { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
         // 配置模型之間的關聯
         protected override void OnModelCreating(ModelBuilder modelBuilder)

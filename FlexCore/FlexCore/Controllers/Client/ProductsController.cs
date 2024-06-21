@@ -38,8 +38,6 @@ namespace FlexCore.Controllers.Client
 			return Ok(vm);
 		}
 
-
-
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetProductById(string id)
         {

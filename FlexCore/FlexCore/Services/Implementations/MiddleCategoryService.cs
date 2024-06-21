@@ -7,18 +7,18 @@ namespace FlexCore.Services.Implementations
 {
 	public class MiddleCategoryService: IMiddleCategoryService
 	{
-		private readonly IMiddleCategoryRepository _middleCategoryRepository;
+		private readonly IMiddleCategoryRepository _repo;
 		private readonly IMapper _mapper;
 
 		public MiddleCategoryService(IMiddleCategoryRepository middleCategoryRepository, IMapper mapper)
 		{
-			_middleCategoryRepository = middleCategoryRepository;
+			_repo = middleCategoryRepository;
 			_mapper = mapper;
 		}
 
 		public async Task<IEnumerable<MiddleCategoryDto>> GetMiddleCategoriesAsync(int TopCategoryId)
 		{
-			var middleCategories = await _middleCategoryRepository.GetMiddleCategoriesAsync(TopCategoryId);
+			var middleCategories = await _repo.GetMiddleCategoriesAsync(TopCategoryId);
 			return _mapper.Map<IEnumerable<MiddleCategoryDto>>(middleCategories);
 		}
 
