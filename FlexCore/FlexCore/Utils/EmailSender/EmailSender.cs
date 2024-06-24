@@ -18,7 +18,9 @@ namespace FlexCore.Utils.EmailSender
                 Port = int.Parse(_configuration["Smtp:Port"]),
                 Credentials = new NetworkCredential(_configuration["Smtp:Username"], _configuration["Smtp:Password"]),
                 EnableSsl = true,
-            };
+				DeliveryMethod = SmtpDeliveryMethod.Network,
+				UseDefaultCredentials = false
+			};
 
             var mailMessage = new MailMessage
             {

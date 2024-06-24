@@ -52,8 +52,8 @@ namespace FlexCore.Services.Implementations
 
             await _repo.Create(user);
 
-            var confirmationLink = $"請點擊<a href=\"{_configuration["AppUrl"]}/api/auth/confirmemail?token={token}&email={user.Email}\">此處</a>完成帳號註冊。";
-            await _emailSender.SendEmailAsync(user.Email, "Email Confirmation", confirmationLink);
+            var confirmationLink = $"請點擊<a href=\"{_configuration["AppUrl"]}/api/client/auth/confirmemail?token={token}&email={user.Email}\">此處</a>完成帳號註冊。";
+            await _emailSender.SendEmailAsync(user.Email, "Flex 帳號驗證信件", confirmationLink);
 
             return Result<string>.Success("註冊成功，請去收取信件");
         }
@@ -62,15 +62,14 @@ namespace FlexCore.Services.Implementations
         {
             var user = await _repo.GetByEmail(email);
 
-            if (user == null) return Result<string>.Failure("驗證失敗");
-            if (user.EmailConfirmed != token) return Result<string>.Failure("驗證失敗");
+            if (user == null || user.EmailConfirmed != token) return Result<string>.Failure("驗證失敗");
 
             user.EmailConfirmed = string.Empty;
             user.IsComfirmed = true;
 
             await _repo.Update(user);
 
-            return Result<string>.Success("驗證成功");
+            return Result<string>.Success("帳號驗證成功");
         }
 
         public async Task<Result<AuthToken>> LoginAsync(UserDto userDto)
