@@ -81,7 +81,7 @@ namespace FlexCore.Services.Implementations
             return Result<AuthToken>.Success(AuthToken.Create(GenerateJwtToken(user)));
         }
 
-        public async Task<bool> IsEmailExits(string email)
+        public async Task<bool> IsEmailExist(string email)
         {
             return await _repo.IsEmailExist(email);
         }

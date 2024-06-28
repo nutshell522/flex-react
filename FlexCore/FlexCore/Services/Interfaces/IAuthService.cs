@@ -10,7 +10,7 @@ namespace FlexCore.Services.Interfaces
         Task<Result<string>> RegisterAsync(UserDto userDto);
         Task<Result<string>> ConfirmEmailAsync(string token, string email);
         Task<Result<AuthToken>> LoginAsync(UserDto userDto);
-        Task<bool> IsEmailExits(string email);
+        Task<bool> IsEmailExist(string email);
         string GenerateJwtToken(UserEntity user);
     }
 }

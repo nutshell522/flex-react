@@ -34,5 +34,43 @@ namespace FlexCore.Controllers.Client
 
             return BadRequest(result);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginVM loginVM)
+        {
+            var userDto = new UserDto
+            {
+                Email = loginVM.Email,
+                Password = loginVM.Password
+            };
+            var result = await _authService.LoginAsync(userDto);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("confirmemail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string email)
+        {
+            var result = await _authService.ConfirmEmailAsync(token, email);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("isEmailExist")]
+        public async Task<IActionResult> IsEmailExist([FromQuery] string email)
+        {
+            var result = await _authService.IsEmailExist(email);
+            return Ok(result);
+        }
     }
 }
