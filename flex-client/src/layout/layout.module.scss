@@ -76,18 +76,18 @@ $bg-gray: #f5f5f5;
   top: 0;
   z-index: 2000;
 
-  &>.left,
-  &>.right {
+  & > .left,
+  & > .right {
     @extend .nav-height;
     position: absolute;
   }
 
-  &>.left {
+  & > .left {
     @extend .nav-height;
     position: absolute;
     left: 40px;
 
-    &>.logo-wrapper {
+    & > .logo-wrapper {
       @extend .nav-height;
       width: 80px;
       display: flex;
@@ -109,7 +109,7 @@ $bg-gray: #f5f5f5;
         object-fit: cover;
       }
 
-      &>h1 {
+      & > h1 {
         line-height: $nav-height;
         font-weight: bold;
         font-size: 40px;
@@ -134,7 +134,7 @@ $bg-gray: #f5f5f5;
     }
   }
 
-  &>.center {
+  & > .center {
     @media screen and (max-width: 991px) {
       position: fixed;
       background-color: #fff;
@@ -150,7 +150,7 @@ $bg-gray: #f5f5f5;
       &.active {
         right: 0;
 
-        +.center-bg {
+        + .center-bg {
           visibility: visible;
           opacity: 1;
         }
@@ -220,17 +220,17 @@ $bg-gray: #f5f5f5;
       transform: translate(-50%);
       position: absolute;
 
-      &>.center-ul {
+      & > .center-ul {
         display: flex;
         height: 100%;
 
-        &>.nav-list-item {
+        & > .nav-list-item {
           height: 100%;
           width: 100px;
           position: relative;
           margin-top: -3px;
 
-          &>.nav-btn {
+          & > .nav-btn {
             width: 100%;
             height: 100%;
             position: absolute;
@@ -299,7 +299,7 @@ $bg-gray: #f5f5f5;
             visibility: visible;
             width: calc(100% - 20px);
 
-            +.bi-search {
+            + .bi-search {
               left: calc(4px + 20px);
             }
           }
@@ -437,8 +437,9 @@ $bg-gray: #f5f5f5;
 
   &.active {
     display: flex;
-    position: sticky;
-    top: 0;
+    position: absolute;
+    // TODO: 改成往下滾會黏在上方
+    // top: 0;
     left: 0;
     width: 100vw;
     background-color: #fff;
@@ -463,7 +464,7 @@ $bg-gray: #f5f5f5;
         margin-bottom: 7px;
         font-weight: bold;
 
-        &>a {
+        & > a {
           color: #777;
         }
       }

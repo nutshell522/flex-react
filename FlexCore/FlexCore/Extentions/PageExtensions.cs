@@ -6,7 +6,7 @@ namespace FlexCore.Extentions
 	public static class PageExtensions
 	{
 		/// <summary>
-		/// 用於轉換 Page 內的 Items
+		/// 將 Page<TSource> 物件轉換為 Page<TDestination> 物件
 		/// </summary>
 		/// <typeparam name="TSource"></typeparam>
 		/// <typeparam name="TDestination"></typeparam>

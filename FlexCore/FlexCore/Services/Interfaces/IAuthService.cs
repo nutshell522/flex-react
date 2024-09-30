@@ -1,6 +1,7 @@
 ﻿using FlexCore.Models;
 using FlexCore.Models.DTOs;
 using FlexCore.Models.Entities;
+using FlexCore.Models.Enum;
 using FlexCore.Models.ViewModels.Client.Token;
 
 namespace FlexCore.Services.Interfaces
@@ -10,7 +11,7 @@ namespace FlexCore.Services.Interfaces
         Task<Result<string>> RegisterAsync(UserDto userDto);
         Task<Result<string>> ConfirmEmailAsync(string token, string email);
         Task<Result<AuthToken>> LoginAsync(UserDto userDto);
-        Task<bool> IsEmailExits(string email);
+        Task<Result<EmailStatus>> CheckEmailStatusAsync(string email);
         string GenerateJwtToken(UserEntity user);
     }
 }

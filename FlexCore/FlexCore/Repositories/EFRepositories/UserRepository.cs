@@ -46,5 +46,11 @@ namespace FlexCore.Repositories.EFRepositories
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<bool> IsEmailConfirmed(string email)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return user.IsComfirmed;
+        }
     }
 }

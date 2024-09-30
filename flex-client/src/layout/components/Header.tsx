@@ -7,17 +7,17 @@ const Header: React.FC = () => {
       <div className={`${styles['header-left']}`}></div>
       <ul className={`${styles['header-right']}`}>
         <li className={`${styles['header-right-item']}`}>
-          <Link to='/' className={`${styles['text-link']}`}>
+          <Link to="/" className={`${styles['text-link']}`}>
             協助
           </Link>
         </li>
         <li className={`${styles['header-right-item']}`}>
-          <Link to='/' className={`${styles['text-link']}`}>
+          <Link to="/" className={`${styles['text-link']}`}>
             加入
           </Link>
         </li>
         <li className={`${styles['header-right-item']}`}>
-          <Link to='/' className={`${styles['text-link']}`}>
+          <Link to="/login" className={`${styles['text-link']}`}>
             登入
           </Link>
         </li>

@@ -11,45 +11,53 @@ using FlexCore.Models.ViewModels.ClientViewModels.ProductColor;
 
 namespace FlexCore.Mappings
 {
-    public class ProductViewModelProfile:Profile
+    public class ProductViewModelProfile : Profile
     {
+        /// <summary>
+        /// 用途: 設定 Product 相關 ViewModel 的映射
+        /// </summary>
         public ProductViewModelProfile()
         {
             CreateMap<TopCategoryDto, TopCategoryVM>();
             CreateMap<MiddleCategoryDto, MiddleCategoryVM>();
             CreateMap<BottomCategoryDto, BottomCategoryVM>();
 
-            CreateMap<ProductDto,ProductListVM>()
+            CreateMap<ProductDto, ProductListVM>()
                 .ForMember(dest => dest.ProductColors, opt => opt.MapFrom(src => MapProductColors(src.ProductColors)));
 
-			CreateMap<ProductDto, ProductVM>()
-		        .ForMember(dest => dest.ProductColors, opt => opt.MapFrom(src => src.ProductColors));
+            CreateMap<ProductDto, ProductVM>()
+                .ForMember(dest => dest.ProductColors, opt => opt.MapFrom(src => src.ProductColors));
 
-			CreateMap<ProductColorDto, ProductColorVM>()
-		        .ForMember(dest => dest.ProductSizes, opt => opt.MapFrom(src => src.ProductSizes))
-		        .ForMember(dest => dest.ProductPictures, opt => opt.MapFrom(src => src.ProductPictures))
-		        .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.ColorOption.Name));
+            CreateMap<ProductColorDto, ProductColorVM>()
+                .ForMember(dest => dest.ProductSizes, opt => opt.MapFrom(src => src.ProductSizes))
+                .ForMember(dest => dest.ProductPictures, opt => opt.MapFrom(src => src.ProductPictures))
+                .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.ColorOption.Name));
 
-			CreateMap<ProductSizeDto, ProductSizeVM>()
-				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.SizeOption.Name));
+            CreateMap<ProductSizeDto, ProductSizeVM>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.SizeOption.Name));
 
-			CreateMap<ProductPictureDto, PictureVM>(); 
-		}
+            CreateMap<ProductPictureDto, PictureVM>();
+        }
 
+        /// <summary>
+        /// 將 ProductColorDto 集合映射為 ProductColorIndexVM 集合
+        /// </summary>
+        /// <param name="productColors">productColors</param>
+        /// <returns>productColorVMs</returns>
         private List<ProductColorIndexVM> MapProductColors(ICollection<ProductColorDto> productColors)
         {
             var productColorVMs = new List<ProductColorIndexVM>();
             foreach (var productColor in productColors)
             {
                 productColorVMs.Add(new ProductColorIndexVM
-				{
+                {
                     Id = productColor.Id,
                     Color = productColor.ColorOption.Color,
                     Name = productColor.ColorOption.Name,
                     ProductPictures = productColor.ProductPictures.Select(p => new PictureVM
-					{
-						Url = p.Url
-					}).ToList()
+                    {
+                        Url = p.Url
+                    }).ToList()
                     // Map other properties as needed
                 });
             }

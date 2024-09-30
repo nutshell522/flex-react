@@ -3,6 +3,7 @@ using FlexCore.Data;
 using FlexCore.Models;
 using FlexCore.Models.DTOs;
 using FlexCore.Models.Entities;
+using FlexCore.Models.Enum;
 using FlexCore.Models.ViewModels.Client.Token;
 using FlexCore.Repositories.Interfaces;
 using FlexCore.Services.Interfaces;
@@ -10,9 +11,11 @@ using FlexCore.Utils.EmailSender;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Net;
+using Microsoft.IdentityModel.JsonWebTokens;
+using FlexCore.Models.ViewModels.Client.User;
 
 namespace FlexCore.Services.Implementations
 {
@@ -25,7 +28,7 @@ namespace FlexCore.Services.Implementations
         private readonly IUserRepository _repo;
         private readonly IMapper _mapper;
 
-        public AuthService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, IEmailSender emailSender,IUserRepository repo, IMapper mapper)
+        public AuthService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, IEmailSender emailSender, IUserRepository repo, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,28 +38,55 @@ namespace FlexCore.Services.Implementations
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// 註冊新用戶，並發送驗證電子郵件。會生成一個驗證令牌並將其通過電子郵件發送給用戶。
+        /// 在生成的 URL 中，令牌會經過 URL 編碼，避免因特殊符號導致的驗證問題。
+        /// </summary>
+        /// <param name="userDto">包含用戶註冊資料的 DTO。</param>
+        /// <returns>
+        /// 如果註冊成功，返回成功訊息和狀態；如果電子郵件已存在，返回失敗訊息。
+        /// </returns>
         public async Task<Result<string>> RegisterAsync(UserDto userDto)
         {
+            // 檢查電子郵件是否已存在
             if (_repo.IsEmailExist(userDto.Email).Result) return Result<string>.Failure("Email已被註冊過");
 
+            // 創建 IdentityUser 並生成確認電子郵件的令牌
             var identityUser = new IdentityUser { Email = userDto.Email, UserName = userDto.Name };
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
 
+            // 將用戶資料存入資料庫
             var user = new UserEntity
             {
                 Name = userDto.Name,
                 Email = userDto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
-                EmailConfirmed = token,
+                EmailConfirmed = token
             };
 
             await _repo.Create(user);
 
-            var confirmationLink = $"請點擊<a href=\"{_configuration["AppUrl"]}/api/client/auth/confirmemail?token={token}&email={user.Email}\">此處</a>完成帳號註冊。";
+            // 對 token 進行 URL 編碼以避免特殊符號問題 (例如: + 號被解讀為空格)
+            var encodedToken = WebUtility.UrlEncode(token);
+
+            // 生成確認連結，將編碼後的 token 加入 URL 中
+            var confirmationLink = $"請點擊<a href=\"{_configuration["AppUrl"]}/api/client/auth/confirmemail?token={encodedToken}&email={user.Email}\">此處</a>完成帳號註冊。";
+
+            // 發送確認電子郵件
             await _emailSender.SendEmailAsync(user.Email, "Flex 帳號驗證信件", confirmationLink);
 
             return Result<string>.Success("註冊成功，請去收取信件");
         }
+
+
+        /// <summary>
+        /// 驗證用戶的電子郵件地址，並確認用戶帳號的有效性。
+        /// </summary>
+        /// <param name="token">電子郵件驗證的令牌。</param>
+        /// <param name="email">用戶的電子郵件地址。</param>
+        /// <returns>
+        /// 如果驗證成功，返回成功訊息；如果驗證失敗，返回失敗訊息。
+        /// </returns>
         [Authorize]
         public async Task<Result<string>> ConfirmEmailAsync(string token, string email)
         {
@@ -72,56 +102,87 @@ namespace FlexCore.Services.Implementations
             return Result<string>.Success("帳號驗證成功");
         }
 
+        /// <summary>
+        /// 用戶登入，驗證電子郵件和密碼，並生成 JWT Token。
+        /// </summary>
+        /// <param name="userDto">包含用戶登入資料的 DTO。</param>
+        /// <returns>
+        /// 如果登入成功，返回包含 JWT Token 的結果；如果登入失敗，返回錯誤訊息。
+        /// </returns>
         public async Task<Result<AuthToken>> LoginAsync(UserDto userDto)
         {
             var user = await _repo.GetByEmail(userDto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(userDto.Password, user.Password) || !user.IsComfirmed)
                 return Result<AuthToken>.Failure("用戶名或密碼錯誤");
 
-            return Result<AuthToken>.Success(AuthToken.Create(GenerateJwtToken(user)));
+            var vm = new AuthToken
+            {
+                Token = GenerateJwtToken(user),
+                User = new UserVM
+                {
+                    Id = user.Id.ToString(),
+                    Name = user.Name,
+                    Email = user.Email
+                }
+            };
+
+            return Result<AuthToken>.Success(vm);
         }
 
-        public async Task<bool> IsEmailExits(string email)
+        /// <summary>
+        /// 驗證電子郵件的註冊與確認狀態。
+        /// </summary>
+        /// <param name="email">要驗證的電子郵件。</param>
+        /// <returns>
+        /// 返回電子郵件的狀態，可能是未註冊、未確認或已確認。
+        /// </returns>
+        public async Task<Result<EmailStatus>> CheckEmailStatusAsync(string email)
         {
-            return await _repo.IsEmailExist(email);
+            if (await _repo.IsEmailExist(email))
+            {
+                if (await _repo.IsEmailConfirmed(email))
+                {
+                    return Result<EmailStatus>.Success(EmailStatus.Confirmed);
+                }
+                else
+                {
+                    return Result<EmailStatus>.Success(EmailStatus.NotConfirmed);
+                }
+            }
+            else
+            {
+                return Result<EmailStatus>.Success(EmailStatus.Unregistered);
+            }
         }
 
+        /// <summary>
+        /// 生成用戶的 JWT Token，包含用戶的相關聲明和有效期。
+        /// </summary>
+        /// <param name="user">用戶實體，包含 JWT 令牌需要的資料。</param>
+        /// <returns>返回生成的 JWT Token 字串。</returns>
         public string GenerateJwtToken(UserEntity user)
         {
-            // 創建一個 JwtSecurityTokenHandler 來處理 JWT 令牌
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            // 從配置中獲取 JWT 密鑰並轉換為字節數組
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
 
-            // 定義一個 SecurityTokenDescriptor 來描述令牌的屬性和內容
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                // 定義令牌的主體，其中包含用戶的聲明（Claims）
                 Subject = new ClaimsIdentity(new[]
                 {
-            // 添加一個聲明，聲明類型為 Name，值為用戶的名字
             new Claim(ClaimTypes.Name, user.Name),
-            // 添加一個聲明，聲明類型為 Email，值為用戶的電子郵件地址
             new Claim(ClaimTypes.Email, user.Email),
-            // 添加一個自定義聲明，聲明類型為 FullName，值為用戶的名字
             new Claim("FullName", user.Name)
         }),
-                // 設置令牌的過期時間
                 Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpiryMinutes"])),
-                // 設置令牌的簽名憑證，使用 HMAC SHA256 算法和密鑰
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                // 設置令牌的發行者
                 Issuer = _configuration["Jwt:Issuer"],
-                // 設置令牌的受眾
                 Audience = _configuration["Jwt:Audience"]
             };
 
-            // 使用 tokenHandler 創建一個 JWT 令牌
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            // Generate a JWT, than get the serialized Token result (string)
+            var tokenHandler = new JsonWebTokenHandler();
+            var serializeToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            // 將 JWT 令牌寫為字串並返回
-            return tokenHandler.WriteToken(token);
+            return serializeToken;
         }
     }
 }

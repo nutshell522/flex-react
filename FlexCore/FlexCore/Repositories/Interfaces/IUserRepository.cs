@@ -9,5 +9,6 @@ namespace FlexCore.Repositories.Interfaces
         Task<UserEntity> Update(UserEntity user);
         Task<UserEntity> GetByEmail(string email);
         Task<bool> IsEmailExist(string email);
+        Task<bool> IsEmailConfirmed(string email);
     }
 }

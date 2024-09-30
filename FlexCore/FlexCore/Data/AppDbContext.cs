@@ -153,7 +153,7 @@ namespace FlexCore.Data
                     for (int i = 0; i < 30; i++)
                     {
                         var product = new ProductEntity
-						{
+                        {
                             Id = $"{item.MiddleCategory.TopCategory.Code}_{item.Code}{i.ToString("000")}",
                             Name = $"{item.MiddleCategory.TopCategory.Name}{item.Name}{i}",
                             BottomCategoryId = item.Id,
@@ -188,15 +188,15 @@ namespace FlexCore.Data
                 {
                     var productPictures = new List<ProductPictureEntity>();
                     var productPicture1 = new ProductPictureEntity
-					{
-						ProductColorId = item.Id,
-						Url = "product_default_picture.jpg"
-					};
+                    {
+                        ProductColorId = item.Id,
+                        Url = "product_default_picture.jpg"
+                    };
                     var productPicture2 = new ProductPictureEntity
                     {
                         ProductColorId = item.Id,
-						Url = "product_default_picture.jpg"
-					};
+                        Url = "product_default_picture.jpg"
+                    };
                     productPictures.AddRange(new[] { productPicture1, productPicture2 });
                     await ProductPictures.AddRangeAsync(productPictures);
 
@@ -204,7 +204,7 @@ namespace FlexCore.Data
                     foreach (var size in await SizeOptions.ToListAsync())
                     {
                         var productSize = new ProductSizeEntity
-						{
+                        {
                             ProductColorId = item.Id,
                             SizeOptionId = size.Id,
                             Stock = 100
@@ -213,6 +213,16 @@ namespace FlexCore.Data
                     }
                     await ProductSizes.AddRangeAsync(productSizes);
                 }
+                await SaveChangesAsync();
+
+                var user = new UserEntity
+                {
+                    Email = "user@example.com",
+                    Password = BCrypt.Net.BCrypt.HashPassword("string"),
+                    Name = "Test Account",
+                    IsComfirmed = true
+                };
+                await Users.AddAsync(user);
                 await SaveChangesAsync();
 
             }
