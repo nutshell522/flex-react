@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import config from '../config.tsx';
 import { TopCategory } from '../hooks/topCategoryHook.tsx';
 import { IProductIndex } from '../hooks/productHook.tsx';
-import { store } from '../store.tsx';
+import store from '../store.tsx';
 
 export interface IApiResult<T> {
   data: T;
@@ -66,6 +66,12 @@ export interface IConfirmEmailReq {
   email: string;
 }
 
+export interface IRigisterReq {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const axiosInstance = axios.create({
   baseURL: config.baseUrl,
 });
@@ -99,7 +105,7 @@ export class AuthApi {
   private static readonly path = '/Auth';
   static login = (data: ILoginReq): ApiResult<IAuthData> =>
     axiosInstance.post(`${this.path}/login`, data);
-  static register = (data: IUser): ApiResult<string> =>
+  static register = (data: IRigisterReq): ApiResult<string> =>
     axiosInstance.post(`${this.path}/register`, data);
   static confirmEmail = (data: IConfirmEmailReq): ApiResult<void> =>
     axiosInstance.get(`${this.path}/confirmEmail?token=${data.token}&email=${data.email}`);

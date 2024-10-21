@@ -2,8 +2,9 @@ import { createBrowserRouter } from 'react-router-dom';
 import NotFound from './NotFound';
 import Layout from './layout/Layout';
 import ProductIndex from './pages/Product/Index';
-import { Login } from './pages/Auth/Login';
-import { LoginPassword } from './pages/Auth/LoginPassword';
+import Login from './pages/Auth/Login';
+import LoginPassword from './pages/Auth/LoginPassword';
+import Register from './pages/Auth/Register';
 
 const router = createBrowserRouter([
   {
@@ -11,8 +12,12 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: 'login/password', // 改為相對路徑
+    path: 'password',
     element: <LoginPassword />,
+  },
+  {
+    path: 'register',
+    element: <Register />,
   },
   {
     path: '',
